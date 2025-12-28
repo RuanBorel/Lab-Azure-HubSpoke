@@ -98,7 +98,6 @@ Exemplo:
 ```
 ping vm-spokb-01.dominio.com
 ```
-
 ---
 
 ## 🧪 Testes Realizados
@@ -111,13 +110,44 @@ ping vm-spokb-01.dominio.com
 
 ---
 
-## 🚀 Próximas Melhorias (Versão 2.0)
+## Integração com Storage Account - Private Endpoit & Service Endpoint (Atualização)
+|   Storage Account  |    Tipo de Integração    |  Acesso interno Azure  |  Acesso Externo  |     DNS     |
+|--------------------|--------------------------|------------------------|------------------|-------------|
+| stoserviceendpointlab |   Service Endpoint    |           ✔            | ✔ (IP Liberado Manualmente) | Públco |
+| stoprivateendpointlab |   Private Endpoint    |           ✔            |   (Bloqueado)  |  Privado (Privatelink) |
 
-- Adicionar Azure Firewall no Hub  
+## Resumo:
+- Service Endpoint melhora o caminho do tráfego, mas mantém o acesso público.
+- Private Endpoint torna o serviço privado, resolvendo para IP interno e isolando da internet.
+
+🌐 Service Endpoint - Comportamento Obervado:
+- Storage acessível pelas VMs do Azure via backbone Microsoft
+- Acesso liberado apenas para VNETs do lab + IP da minha máquina local
+- Resoluçao de DNS permanece pública, porém tráfego entra pela rede interna
+- Mapemaneto do Fole Share possível internamente e externamente (quando liberado o IP)
+
+## 🧪 Testes Realizados
+### VMs → acesso ✔
+### Minha máquina local → acesso ✔ (IP público liberado)
+### Outros IPs externos → Bloqueado
+
+🌐 Private Endpoint - Comportamento Obervado:
+- Endpoint privado criado dentro da subnet HUB
+- Private DNS Zone vinculada as VNETs
+- Resolução DNS interna retorna IP privado (10.x.x.x)
+- Acesso externo *falha* por não conseguir resolver endpoint privado
+
+## 🧪 Testes Realizados
+### VMs → acesso ✔
+### Minha máquina local → acesso negado (Comportamento esperado)
+
+---
+
+## 🚀 Próximas Melhorias (Versão 2.0)
+  
 - Implementar Azure Bastion  
-- Adicionar Log Analytics + Diagnostics  
-- Criar rota default (0.0.0.0/0) para NVA ou Firewall  
-- Implementar Private DNS Resolver  
+- Implementar Load Balancer (L4)
+- Implementar Application Gateway
 
 ---
 
